@@ -72,7 +72,7 @@ st.title("Pantry-Based Recipe Recommender")
 
 st.sidebar.header("Input Your Pantry Items")
 user_id = st.sidebar.text_input("User ID", "1")
-pantry = st.sidebar.text_area("Enter pantry items separated by commas", "pasta, tomato, onion, garlic, cheese, chicken")
+pantry = st.sidebar.text_area("Enter pantry items separated by commas", "sugar, eggs, flour, butter, vanilla extract, baking soda")
 pantry_list = [item.strip() for item in pantry.split(',')]
 
 if st.sidebar.button("Get Recommendations"):
