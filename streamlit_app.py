@@ -3,7 +3,6 @@ import streamlit as st
 from sklearn.preprocessing import MultiLabelBinarizer
 import pickle
 import numpy as np
-from surprise import SVD
 
 # Load preprocessed datasets
 @st.cache_data
