@@ -26,18 +26,10 @@ def load_model():
 
 algo = load_model()
 
-# Compute ingredient matrix
-def compute_ingredient_matrix(recipes):
-    mlb = MultiLabelBinarizer()
-    ingredient_matrix = mlb.fit_transform(recipes['ingredients'])
-    return ingredient_matrix, mlb.classes_
-
-ingredient_matrix, mlb_classes = compute_ingredient_matrix(recipes)
-
 def get_recommendations(pantry, num_recommendations=10):
-    # Binarize the pantry ingredients using the pre-trained MultiLabelBinarizer
-    mlb = MultiLabelBinarizer(classes=mlb_classes)
-    mlb.fit(recipes['ingredients'])  # Ensure it's fitted with the same classes
+    mlb = MultiLabelBinarizer()
+    # Binarize the pantry ingredients using the MultiLabelBinarizer
+    ingredient_matrix = mlb.fit_transform(recipes['ingredients'])
     pantry_vector = mlb.transform([pantry])[0]
 
     # Calculate similarity scores between the pantry and recipe ingredients
