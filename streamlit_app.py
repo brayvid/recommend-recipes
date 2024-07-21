@@ -3,14 +3,15 @@ import streamlit as st
 from sklearn.preprocessing import MultiLabelBinarizer
 import pickle
 import numpy as np
+from surprise import SVD
 
 # Load preprocessed datasets
 @st.cache_data
 def load_preprocessed_data():
-    with open('data/recipes.pkl', 'rb') as f:
+    with open('recipes.pkl', 'rb') as f:
         recipes = pickle.load(f)
 
-    with open('data/interactions.pkl', 'rb') as f:
+    with open('interactions.pkl', 'rb') as f:
         interactions = pickle.load(f)
 
     return recipes, interactions
@@ -20,13 +21,13 @@ recipes, interactions = load_preprocessed_data()
 # Load the pre-trained model
 @st.cache_resource
 def load_model():
-    with open('data/trained_model.pkl', 'rb') as f:
+    with open('trained_model.pkl', 'rb') as f:
         model = pickle.load(f)
     return model
 
 algo = load_model()
 
-def get_recommendations(pantry, user_id, num_recommendations=10):
+def get_recommendations(pantry, user_id, num_recommendations=5):
     # Binarize the ingredients
     mlb = MultiLabelBinarizer()
     ingredient_matrix = mlb.fit_transform(recipes['ingredients'])
