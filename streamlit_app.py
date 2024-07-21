@@ -69,7 +69,7 @@ def get_recommendations(pantry, num_recommendations=5):
 st.title("Pantry-Based Recipe Recommender")
 
 # Input for pantry items
-pantry_input = st.text_area("Enter pantry items separated by commas", "eggs", "sugar", "flour", "butter", "vanilla extract", "baking soda", "rolled oats","chocolate chips" ,"peanut butter")
+pantry_input = st.text_area("Enter pantry items separated by commas", "eggs, sugar, flour, butter, vanilla extract, baking soda, rolled oats, chocolate chips, peanut butter")
 pantry_list = [item.strip() for item in pantry_input.split(',')]
 
 # Button to get recommendations
