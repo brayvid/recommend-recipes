@@ -26,12 +26,18 @@ def load_model():
 
 algo = load_model()
 
-def get_recommendations(pantry, user_id, num_recommendations=10):
-    # Binarize the ingredients
+# Compute ingredient matrix
+def compute_ingredient_matrix(recipes):
     mlb = MultiLabelBinarizer()
     ingredient_matrix = mlb.fit_transform(recipes['ingredients'])
+    return ingredient_matrix, mlb.classes_
 
-    # Create a vector for the pantry ingredients
+ingredient_matrix, mlb_classes = compute_ingredient_matrix(recipes)
+
+def get_recommendations(pantry, num_recommendations=10):
+    # Binarize the pantry ingredients using the pre-trained MultiLabelBinarizer
+    mlb = MultiLabelBinarizer(classes=mlb_classes)
+    mlb.fit(recipes['ingredients'])  # Ensure it's fitted with the same classes
     pantry_vector = mlb.transform([pantry])[0]
 
     # Calculate similarity scores between the pantry and recipe ingredients
@@ -54,7 +60,7 @@ def get_recommendations(pantry, user_id, num_recommendations=10):
 
     # Predict ratings for the filtered recipes using the collaborative filtering model
     top_recipe_ids = recipes.iloc[filtered_indices]['id'].values
-    predictions = [algo.predict(user_id, recipe_id).est for recipe_id in top_recipe_ids]
+    predictions = [algo.predict('user', recipe_id).est for recipe_id in top_recipe_ids]
 
     # Combine predictions with similarity scores
     combined_scores = [(recipe_id, score, prediction) for recipe_id, score, prediction in zip(top_recipe_ids, similarity_scores[filtered_indices], predictions)]
@@ -71,12 +77,11 @@ def get_recommendations(pantry, user_id, num_recommendations=10):
 st.title("Pantry-Based Recipe Recommender")
 
 st.sidebar.header("Input Your Pantry Items")
-user_id = st.sidebar.text_input("User ID", "1")
 pantry = st.sidebar.text_area("Enter pantry items separated by commas", "sugar, eggs, flour, butter, vanilla extract, baking soda")
 pantry_list = [item.strip() for item in pantry.split(',')]
 
 if st.sidebar.button("Get Recommendations"):
-    suggestions = get_recommendations(pantry_list, user_id)
+    suggestions = get_recommendations(pantry_list)
 
     if len(suggestions) > 0:
         st.write("You can make the following recipes:")
