@@ -26,7 +26,7 @@ def load_model():
 
 algo = load_model()
 
-def get_recommendations(pantry, user_id, num_recommendations=5):
+def get_recommendations(pantry, user_id, num_recommendations=10):
     # Binarize the ingredients
     mlb = MultiLabelBinarizer()
     ingredient_matrix = mlb.fit_transform(recipes['ingredients'])
