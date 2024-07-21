@@ -10,7 +10,7 @@ def load_preprocessed_data():
     with open('data/recipes_high_rating.pkl', 'rb') as f:
         recipes = pickle.load(f)
 
-    with open('data/interactions_25k.pkl', 'rb') as f:
+    with open('data/interactions_10k.pkl', 'rb') as f:
         interactions = pickle.load(f)
 
     return recipes, interactions
