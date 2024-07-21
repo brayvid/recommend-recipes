@@ -1,8 +1,8 @@
+import numpy as np
 import pandas as pd
 import streamlit as st
 from sklearn.preprocessing import MultiLabelBinarizer
 import pickle
-import numpy as np
 
 # Load preprocessed datasets
 @st.cache_data
@@ -26,9 +26,9 @@ def load_model():
 
 algo = load_model()
 
-def get_recommendations(pantry, num_recommendations=10):
+def get_recommendations(pantry, num_recommendations=5):
+    # Binarize the pantry ingredients using the pre-trained MultiLabelBinarizer
     mlb = MultiLabelBinarizer()
-    # Binarize the pantry ingredients using the MultiLabelBinarizer
     ingredient_matrix = mlb.fit_transform(recipes['ingredients'])
     pantry_vector = mlb.transform([pantry])[0]
 
@@ -68,11 +68,12 @@ def get_recommendations(pantry, num_recommendations=10):
 # Streamlit app layout
 st.title("Pantry-Based Recipe Recommender")
 
-st.sidebar.header("Input Your Pantry Items")
-pantry = st.sidebar.text_area("Enter pantry items separated by commas", "sugar, eggs, flour, butter, vanilla extract, baking soda")
-pantry_list = [item.strip() for item in pantry.split(',')]
+# Input for pantry items
+pantry_input = st.text_area("Enter pantry items separated by commas", "butter, sugar, flour, eggs, vanilla extract, baking soda, chocolate chips")
+pantry_list = [item.strip() for item in pantry_input.split(',')]
 
-if st.sidebar.button("Get Recommendations"):
+# Button to get recommendations
+if st.button("Get Recommendations"):
     suggestions = get_recommendations(pantry_list)
 
     if len(suggestions) > 0:
